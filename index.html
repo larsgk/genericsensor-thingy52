@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- BEGIN GenericSensor Thingy52 initialization -->
+<script type="module" >
+    import './src/genericsensor-thingy52.js';
+    import { replaceSensors } from './src/sensors.js';
+
+    replaceSensors([
+        'Accelerometer',
+        'AmbientLightSensor',
+        'Gyroscope',
+        'Magnetometer',
+        'TemperatureSensor'
+    ]);
+</script>
+<!-- END GenericSensor Thingy52 initialization -->
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body {
+            background-color: #e0e0e0;
+            font: 20px monospace;
+        }
+        #list {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+        }
+        #list > span {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+    <genericsensor-thingy52></genericsensor-thingy52>
+    <button onclick="initSensors()">INIT SENSORS</button>
+    <div id="list"></div>
+</body>
+
+<script>
+    const sensorList = [
+        {
+            name: 'Accelerometer',
+            printData: (sensor) => `(x, y, z) = (${sensor.x.toFixed(2)}, ${sensor.y.toFixed(2)}, ${sensor.z.toFixed(2)})`
+        },
+        {
+            name: 'AmbientLightSensor',
+            printData: (sensor) => `Illuminance = ${sensor.illuminance}`
+        },
+        {
+            name: 'Gyroscope',
+            printData: (sensor) => `(x, y, z) = (${sensor.x.toFixed(2)}, ${sensor.y.toFixed(2)}, ${sensor.z.toFixed(2)})`
+        },
+        {
+            name: 'Magnetometer',
+            printData: (sensor) => `(x, y, z) = (${sensor.x.toFixed(2)}, ${sensor.y.toFixed(2)}, ${sensor.z.toFixed(2)})`
+        },
+        {
+            name: 'TemperatureSensor',
+            printData: (sensor) => `${sensor.celsius.toFixed(2)}°C, ${sensor.fahrenheit.toFixed(2)}°F, ${sensor.kelvin.toFixed(2)}K`
+        }
+    ];
+
+    function initSensors() {
+        // Fill the list with rows
+        let listContent = '';
+        for (const item of sensorList) {
+            listContent += `<span>${item.name}</span><span id="${item.name}Value"></span>`;
+        }
+        document.querySelector('#list').innerHTML = listContent;
+
+        // Enable sensors
+        for (const item of sensorList) {
+            const dataEl = document.querySelector(`#${item.name}Value`);
+
+            if (item.name in window) {
+                console.log(`Init ${item.name}`);
+                const sensor = new window[item.name]();
+                sensor.addEventListener('reading', () => {
+                    dataEl.textContent = item.printData(sensor);
+                });
+                
+                sensor.start();
+            } else {
+                dataEl.textContent = "Not available";    
+            }
+        }
+    }    
+</script>
+</html>
+
+
+
