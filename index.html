@@ -22,6 +22,24 @@
             background-color: #e0e0e0;
             font: 20px monospace;
         }
+        .flex-container {
+            display: flex;
+            height: 100%;
+        }
+        .content {
+            margin: auto;
+            position: relative;
+            width: 95%;
+            max-width: 700px;
+        }
+        .col {
+            display: flex;
+            flex-direction: column;
+        }
+        .description {
+            font-size: 80%;
+            font-style: italic;
+        }
         #list {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -32,9 +50,16 @@
     </style>
 </head>
 <body>
-    <genericsensor-thingy52></genericsensor-thingy52>
-    <button onclick="initSensors()">INIT SENSORS</button>
-    <div id="list"></div>
+    <div class="flex-container">
+        <div class="content">
+            <div class="col">
+                <h2>Generic Sensors With Thingy:52</h2>
+                <span class="description">Click the '+' sign on the Thing:52 in the lower right corner to connect to the Thingy:52 and start receiving sensor data.</span>
+                <br>
+                <div id="list"></div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -85,7 +110,9 @@
                 dataEl.textContent = "Not available";    
             }
         }
-    }    
+    }
+
+    window.addEventListener('load', initSensors);
 </script>
 </html>
 

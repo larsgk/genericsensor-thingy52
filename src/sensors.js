@@ -181,11 +181,16 @@ thingy52Sensors['TemperatureSensor'] = class extends BaseSensor {
 }
 
 export function replaceSensors(list) {
+    console.log(`Replacing/hijacking the following sensors: ${list.join(', ')}`);
     for (const item of list) {
         if (item in thingy52Sensors) {
             window[item] = thingy52Sensors[item];
         }
     }
-}
 
-window['replaceSensors'] = replaceSensors;
+    // Inject the genericsensor-thingy52 element in the end of the body tag
+    document.body.insertBefore(
+        document.createElement('genericsensor-thingy52'),
+        document.body.firstChild
+    );
+}
